@@ -4,6 +4,8 @@ package irdc.ex03_01;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -24,10 +26,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -43,6 +48,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.CompoundButton.OnCheckedChangeListener;
  
 public class EX03_01 extends TabActivity {
   //db star
@@ -50,6 +56,10 @@ public class EX03_01 extends TabActivity {
   private int version = 1;
   private int dposition;
   private AlertDialog.Builder builder;
+  private MyAdapter mSimpleAdapter;
+  private ListView alarmclock_view;
+  private ArrayList<HashMap<String, Object>> alarmclock_list;
+  
   private int id;
   private String tables[] = { "sleeptb", "alarmclock" }; //資料庫資料表
   private String fieldNames[][] =     /* 資料庫欄位名稱 */
@@ -418,9 +428,21 @@ public class EX03_01 extends TabActivity {
 
     
     //tab3的item
-    list2 = (ListView) findViewById(R.id.tab3_itemview);
-    /*setOnItemClickListener*/
     
+    alarmclock_list = new ArrayList<HashMap<String,Object>>();
+
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("ItemTitle", "新增鬧鐘");
+    map.put("ItemText", "點兩下新增");
+    alarmclock_list.add(map);
+    
+    map.put("ItemTitle", "test");
+    map.put("ItemText", "test");
+    alarmclock_list.add(map);
+
+    alarmclock_view = (ListView) findViewById(R.id.tab3_itemview);
+    /*setOnItemClickListener*/
+    /*
     ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(
     this,android.R.layout.simple_list_item_1, new String[]{
             "新增鬧鐘",
@@ -429,8 +451,13 @@ public class EX03_01 extends TabActivity {
             "新增鬧鐘",
             "新增鬧鐘"
     });
+*/    
+    mSimpleAdapter = new MyAdapter(this, alarmclock_list, R.layout.listview_style_1, 
+        new String[]{"ItemTitle","ItemText"}, new int[]{R.id.topTextView,R.id.bottomTextView});  
     
-    list2.setOnItemLongClickListener(new OnItemLongClickListener() {
+    alarmclock_view.setAdapter(mSimpleAdapter);     
+    
+    alarmclock_view.setOnItemLongClickListener(new OnItemLongClickListener() {
       public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) 
       {
         dposition = position;
@@ -459,12 +486,12 @@ public class EX03_01 extends TabActivity {
         return true;
       }
      });
-       
-    list2.setAdapter(adapter3);
     
+    
+       
     updateListView();
 
-    list2.setOnItemClickListener
+    alarmclock_view.setOnItemClickListener
     (new ListView.OnItemClickListener() {
       public void onItemClick(AdapterView<?> parent,View view,int position,long id) 
       {
@@ -566,6 +593,65 @@ public class EX03_01 extends TabActivity {
          }
         )
     .show();
+  }
+  
+  public class MyAdapter extends SimpleAdapter {
+    
+    Map<Integer, Boolean> map;
+   
+    LayoutInflater mInflater;
+   
+    private List<? extends Map<String, ?>> mList;
+   
+    public MyAdapter(Context context, ArrayList<HashMap<String, Object>> data,
+                    int resource, String[] from, int[] to) 
+    {
+            super(context, data, resource, from, to);
+
+            map = new HashMap<Integer, Boolean>();
+            mInflater = LayoutInflater.from(context);
+            mList = data;
+            for(int i = 0; i < data.size(); i++) 
+            {
+                    map.put(i, false);
+            }
+    }
+   
+    @Override
+    public int getCount() {
+            return mList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+            return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+            return position;
+    }
+    
+   
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) 
+    {
+            if(convertView == null) {
+                    convertView = mInflater.inflate(R.layout.listview_style_1, null);
+            }
+            TextView tN = (TextView) convertView.findViewById(R.id.topTextView);
+            tN.setText((String)mList.get(position).get("ItemTitle"));
+           
+            TextView tP = (TextView) convertView.findViewById(R.id.bottomTextView);
+            tP.setText((String)mList.get(position).get("ItemText"));
+           
+            CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.CheckBox02);
+   
+            checkBox.setChecked(map.get(position));
+           
+            return convertView;
+    }
+   
 }
   
 }
