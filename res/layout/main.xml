@@ -103,6 +103,7 @@ android:id="@+id/tab3">
 <ListView 
 android:layout_height="430dip" 
 android:layout_width="320dip" 
+android:longClickable="true"
 android:id="@+id/tab3_itemview">
 </ListView>
 </LinearLayout>

@@ -25,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,19 +44,18 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
  
-
-
-
 public class EX03_01 extends TabActivity {
   //db star
   private MySQLiteOpenHelper dbHelper=null;
   private int version = 1;
+  private int dposition;
+  private AlertDialog.Builder builder;
   private int id;
   private String tables[] = { "sleeptb", "alarmclock" }; //資料庫資料表
   private String fieldNames[][] =     /* 資料庫欄位名稱 */
   {
     { "sleep_id", "sleep_day","wakeup_day", "sleep_time", "wakeup_time" ,"longtime_hour","longtime_min"},
-    { "alarm_id", "alarm_name", "alarm_hourmin", "alarm_sec", "alarm_game"}
+    { "alarm_id", "alarm_name", "alarm_hourmin", "alarm_repeat", "alarm_game"}
   };
   
   /* 資料庫欄位資料型態 */
@@ -99,6 +99,9 @@ public class EX03_01 extends TabActivity {
     Resources res = getResources();
     
     setTitle("睡眠管理");
+
+    builder = new AlertDialog.Builder(this);
+
     /*分頁的應用*/
     TabHost tabHost = getTabHost();
     LayoutInflater.from(this).inflate(R.layout.main,tabHost.getTabContentView(), true);
@@ -421,7 +424,41 @@ public class EX03_01 extends TabActivity {
     ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(
     this,android.R.layout.simple_list_item_1, new String[]{
             "新增鬧鐘",
+            "新增鬧鐘",
+            "新增鬧鐘",
+            "新增鬧鐘",
+            "新增鬧鐘"
     });
+    
+    list2.setOnItemLongClickListener(new OnItemLongClickListener() {
+      public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) 
+      {
+        dposition = position;
+        
+        builder.setMessage("delete?");
+        builder.setCancelable(false);
+       
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id)
+            {
+              openOptionsDialog("Item LONG clicked. Position:" + dposition);
+            }
+        });
+       
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id)
+            {
+            
+            }
+        });
+        
+        AlertDialog alert = builder.create();
+        alert.show();
+      
+        
+        return true;
+      }
+     });
        
     list2.setAdapter(adapter3);
     
@@ -442,7 +479,7 @@ public class EX03_01 extends TabActivity {
         }
         else
         {
-          //delete
+          //modify
           
         }
       }
@@ -513,6 +550,24 @@ public class EX03_01 extends TabActivity {
     if(s.length()==1) s="0"+s;
     return s;
   }
+  
+  //error message
+  private void openOptionsDialog(String info)
+{
+    new AlertDialog.Builder(this)
+    .setTitle("message")
+    .setMessage(info)
+    .setPositiveButton("OK",
+        new DialogInterface.OnClickListener()
+        {
+         public void onClick(DialogInterface dialoginterface, int i)
+         {
+         }
+         }
+        )
+    .show();
+}
+  
 }
   
 
