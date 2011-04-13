@@ -1,0 +1,43 @@
+<AbsoluteLayout 
+android:layout_width="fill_parent" 
+android:layout_height="fill_parent" 
+xmlns:android="http://schemas.android.com/apk/res/android" 
+android:background="@drawable/back" android:id="@+id/AbsoluteLayout_music">
+
+
+Volume
+Volume
+<TextView android:textColor="#27408B" 
+android:id="@+id/view_volume" 
+android:text="音量大小" 
+android:gravity="center" 
+android:layout_y="185dip" 
+android:layout_height="wrap_content" 
+android:textSize="18sp" 
+android:layout_width="80dip" 
+android:layout_x="6dip"></TextView>
+<ImageButton
+    android:id="@+id/upButton"
+    android:src="@drawable/up" 
+    android:layout_height="50px" 
+    android:layout_width="50px" 
+    android:layout_x="60px" 
+    android:layout_y="220px"/>
+    <ImageButton
+    android:id="@+id/downButton"
+    android:src="@drawable/down"
+  android:layout_height="50px" android:layout_width="50px" android:layout_x="10px" android:layout_y="220px"/><TextView android:layout_height="wrap_content" android:layout_x="0dip" android:layout_y="0dip" android:layout_width="fill_parent" android:id="@+id/music_title" android:textSize="26sp" android:gravity="center" android:textColor="#27408B" android:text="選擇你所需要的舒眠音樂"></TextView>
+
+
+<Button android:layout_height="wrap_content" android:text="選擇鈴聲" android:id="@+id/music_change" android:layout_x="0dip" android:layout_width="120dip" android:layout_y="80dip"></Button><Button android:layout_height="wrap_content" android:layout_x="0dip" android:layout_width="120dip" android:text="鈴聲持續時間" android:id="@+id/music_long" android:layout_y="130dip"></Button>Volume
+Volume
+
+
+<TextView android:layout_height="wrap_content" android:layout_x="180dip" android:textSize="20sp" android:text="顯示選擇鈴聲" android:layout_width="120dip" android:textColor="#27408B" android:id="@+id/view_change" android:layout_y="87dip"></TextView><TextView android:layout_height="wrap_content" android:layout_x="180dip" android:textSize="20sp" android:layout_width="120dip" android:textColor="#27408B" android:text="顯示選擇長度" android:id="@+id/view_long" android:layout_y="138dip"></TextView>
+
+
+<ImageButton android:layout_x="5dip" android:layout_y="300dip" android:layout_height="80dip" android:layout_width="130dip" android:id="@+id/ImageButton_OK"></ImageButton>
+<ImageButton android:layout_x="179dip" android:layout_y="300dip" android:layout_height="80dip" android:layout_width="130dip" android:id="@+id/ImageButton_cancel"></ImageButton><ProgressBar android:id="@+id/myProgress" style="?android:attr/progressBarStyleHorizontal" android:layout_width="160dip" android:layout_height="wrap_content" android:max="7" android:progress="5" android:layout_x="150px" android:layout_y="200px"/><ImageView android:id="@+id/myImage" android:layout_height="40px" android:layout_width="40px" android:layout_x="85px" android:layout_y="177px"/>
+
+</AbsoluteLayout>
+

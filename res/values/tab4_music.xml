@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string-array name="music">
+     <item>秋天的邀請</item>
+     <item>圍繞著暖爐</item>
+     <item>夏天的黃昏</item>
+     <item>河流上的落葉</item>
+     <item>褐色大街</item>
+     <item>慵懶沙灘</item>
+     <item>藍天白雲</item>
+     <item>藍色多瑙河</item>
+     <item>小夜曲</item>
+     <item>小星星</item>
+     <item>天鵝湖</item>
+     <item>杜鵑圓舞曲</item>
+     <item>莫札特搖籃曲</item>
+     <item>睡美人圓舞曲</item>
+      <item>森林中的小屋 </item>   
+  </string-array>
+</resources>

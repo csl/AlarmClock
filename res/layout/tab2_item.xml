@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+android:textColor="#FFFFFF">  
+<item 
+  android:id="@+id/opt1"       
+ android:title="需要" />  
+ <item 
+ android:id="@+id/opt2"        
+ android:title="menu" />  
+ <item 
+ android:id="@+id/opt3"        
+ android:title="嗎??" />
+ </menu>

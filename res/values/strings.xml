@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="hello">Hello World, EX03_01</string>
+  <string name="app_name">睡眠管理系統</string>
+  <string name="str_1">我是存放在strings.xml裡的「字串1」</string>
+
+
+
+<string name="about_name">使用說明</string>
+
+<string name="str_text1">開始時間</string>
+<string name="str_text2">重複響起間隔</string>
+<string name="str_text3">秒</string>
+</resources>

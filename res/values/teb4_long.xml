@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string-array name="musiclong">
+     <item>3分鐘</item>
+     <item>5分鐘</item>
+     <item>10分鐘</item>
+     <item>15分鐘</item>
+     <item>30分鐘</item>
+     <item>1個小時</item>
+  </string-array>
+</resources>

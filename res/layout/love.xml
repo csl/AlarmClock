@@ -1,0 +1,11 @@
+<AbsoluteLayout 
+android:id="@+id/AbsoluteLayout01" 
+android:layout_width="fill_parent" 
+android:layout_height="fill_parent" 
+xmlns:android="http://schemas.android.com/apk/res/android" android:background="@drawable/back">
+
+
+
+<TextView android:layout_y="0dip" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_x="0dip" android:gravity="center" android:id="@+id/love_title" android:text="睡眠小資訊" android:textColor="#27408B" android:textSize="26sp"></TextView>
+<ListView android:layout_width="320dip" android:layout_x="0dip" android:layout_y="50dip" android:layout_height="380dip" android:id="@+id/tab4_lovelistview"></ListView>
+</AbsoluteLayout>

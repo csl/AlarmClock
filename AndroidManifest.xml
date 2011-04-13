@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="irdc.ex03_01"
+  android:versionCode="1"
+  android:versionName="1.0.0">
+  <application
+    android:icon="@drawable/icon"
+    android:label="@string/app_name">
+    <receiver android:name="CallAlarm" android:process=":remote" />
+
+    <activity android:name="hard">
+
+    </activity>
+        <activity android:name="music">
+
+    </activity>
+        <activity android:name="dream">
+
+    </activity>
+    <activity android:name="index">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity android:name="about">
+
+    </activity>
+    <activity android:name="EX03_01" android:label="@string/app_name">
+
+    </activity>
+
+    <activity android:name="AlarmAlert"
+              android:label="@string/app_name">
+    </activity>
+  </application>
+</manifest> 
