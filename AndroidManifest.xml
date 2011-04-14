@@ -12,6 +12,11 @@
     <activity android:name="hard">
 
     </activity>
+    
+    <activity android:name="alarmclock">
+
+    </activity>
+    
         <activity android:name="music">
 
     </activity>

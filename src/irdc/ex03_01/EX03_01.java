@@ -50,29 +50,30 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
  
-public class EX03_01 extends TabActivity {
+public class EX03_01 extends TabActivity implements OnItemClickListener{
   //db star
-  private MySQLiteOpenHelper dbHelper=null;
+  static MySQLiteOpenHelper dbHelper=null;
   private int version = 1;
   private int dposition;
   private AlertDialog.Builder builder;
   private MyAdapter mSimpleAdapter;
   private ListView alarmclock_view;
-  private ArrayList<HashMap<String, Object>> alarmclock_list;
   
-  private int id;
+  private ArrayList<String> sp;
+  
+  private int next_id;
   private String tables[] = { "sleeptb", "alarmclock" }; //資料庫資料表
   private String fieldNames[][] =     /* 資料庫欄位名稱 */
   {
     { "sleep_id", "sleep_day","wakeup_day", "sleep_time", "wakeup_time" ,"longtime_hour","longtime_min"},
-    { "alarm_id", "alarm_name", "alarm_hourmin", "alarm_repeat", "alarm_game"}
+    { "alarm_id", "alarm_name", "alarm_hourmin", "alarm_section", "alarm_repeat", "alarm_game"}
   };
   
   /* 資料庫欄位資料型態 */
   private String fieldTypes[][] =
   {
     { "INTEGER PRIMARY KEY AUTOINCREMENT", "text" , "text", "text", "text","text","text"},
-    { "INTEGER PRIMARY KEY AUTOINCREMENT", "text" , "text", "text", "text"}
+    { "INTEGER PRIMARY KEY AUTOINCREMENT", "text" , "text", "text", "text", "text"}
   };
 
   Intent intent = new Intent();
@@ -90,8 +91,10 @@ public class EX03_01 extends TabActivity {
   private int calday;
   public int calhour;
   public int calmin;
+
   private static final String[] array =
   { "11/02/16   15:30   16:30   1.0", "11/02/17   13:30   18:00   4.0" };
+  
   LinearLayout myLinearLayout;
   //TextView myTextView;
   ListView myListView;
@@ -386,7 +389,6 @@ public class EX03_01 extends TabActivity {
          
          /* 取得設定的開始時間，秒及毫秒設為0 */
          aclock.setTimeInMillis(System.currentTimeMillis());
-         //aclock.set(Calendar.DAY_OF_WEEK_IN_MONTH, Calendar.WEDNESDAY);
          aclock.set(Calendar.HOUR_OF_DAY, tPicker.getCurrentHour());
          aclock.set(Calendar.MINUTE, tPicker.getCurrentMinute());
          aclock.set(Calendar.SECOND,0);
@@ -394,7 +396,7 @@ public class EX03_01 extends TabActivity {
          
          /* 指定鬧鐘設定時間到時要執行CallAlarm.class */
          Intent intent = new Intent(EX03_01.this, CallAlarm.class);
-         PendingIntent sender = PendingIntent.getBroadcast(EX03_01.this, 0/*Integer.valueOf(id)*/, intent, 0);
+         PendingIntent sender = PendingIntent.getBroadcast(EX03_01.this, Integer.valueOf(next_id), intent, 0);
          
          /* setRepeating()可讓鬧鐘重覆執行 */
          AlarmManager am  = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -428,9 +430,8 @@ public class EX03_01 extends TabActivity {
 
     
     //tab3的item
-    
+/*    
     alarmclock_list = new ArrayList<HashMap<String,Object>>();
-
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("ItemTitle", "新增鬧鐘");
     map.put("ItemText", "點兩下新增");
@@ -439,76 +440,50 @@ public class EX03_01 extends TabActivity {
     map.put("ItemTitle", "test");
     map.put("ItemText", "test");
     alarmclock_list.add(map);
-
+*/
     alarmclock_view = (ListView) findViewById(R.id.tab3_itemview);
     /*setOnItemClickListener*/
-    /*
+    
+    Cursor alarmclock_tab3 = dbHelper.select(tables[1], fieldNames[1], null, null, null, null, null);   
+    
+    sp = new ArrayList<String>();
+
+    sp.add("新增鬧鐘");
+    next_id = 0;
+    while (alarmclock_tab3.moveToNext())
+    {
+      next_id = Integer.valueOf(alarmclock_tab3.getString(0));
+      sp.add(alarmclock_tab3.getString(1)+ "," + alarmclock_tab3.getString(2));
+    }
+
+    String[] alarmclock_str = (String[])sp.toArray(new String[sp.size()]);
+
     ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(
-    this,android.R.layout.simple_list_item_1, new String[]{
-            "新增鬧鐘",
-            "新增鬧鐘",
-            "新增鬧鐘",
-            "新增鬧鐘",
-            "新增鬧鐘"
-    });
-*/    
-    mSimpleAdapter = new MyAdapter(this, alarmclock_list, R.layout.listview_style_1, 
-        new String[]{"ItemTitle","ItemText"}, new int[]{R.id.topTextView,R.id.bottomTextView});  
+    this,android.R.layout.simple_list_item_1, alarmclock_str);
+
+    //mSimpleAdapter = new MyAdapter(this, alarmclock_list, R.layout.listview_style_1, 
+      //  new String[]{"ItemTitle","ItemText"}, new int[]{R.id.topTextView,R.id.bottomTextView});  
     
-    alarmclock_view.setAdapter(mSimpleAdapter);     
-    
-    alarmclock_view.setOnItemLongClickListener(new OnItemLongClickListener() {
-      public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) 
-      {
-        dposition = position;
-        
-        builder.setMessage("delete?");
-        builder.setCancelable(false);
-       
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id)
-            {
-              openOptionsDialog("Item LONG clicked. Position:" + dposition);
-            }
-        });
-       
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id)
-            {
-            
-            }
-        });
-        
-        AlertDialog alert = builder.create();
-        alert.show();
-      
-        
-        return true;
-      }
-     });
-    
-    
-       
+    alarmclock_view.setAdapter(adapter3);     
+    //alarmclock_view.setOnItemClickListener(this);   
+
     updateListView();
 
     alarmclock_view.setOnItemClickListener
     (new ListView.OnItemClickListener() {
       public void onItemClick(AdapterView<?> parent,View view,int position,long id) 
       {
-        if (id == 0)
-        {
-          /* 取得按下按鈕時的時間做為tPicker的預設值 */
-            aclock.setTimeInMillis(System.currentTimeMillis());
-            tPicker.setCurrentHour(aclock.get(Calendar.HOUR_OF_DAY));
-            tPicker.setCurrentMinute(aclock.get(Calendar.MINUTE));
-            /* 跳出設定畫面di */
-            di.show();
-        }
-        else
-        {
-          //modify
+          //Bound next_id
+          Bundle bundle = new Bundle();
+          bundle.putInt("next_id", next_id+1);
+          bundle.putLong("id", id);
+          bundle.putString("list_item", sp.get(position));
+        
+          Intent intent = new Intent();
+          intent.setClass(EX03_01.this, alarmclock.class);
+          intent.putExtras(bundle);
+          startActivity(intent);
           
-        }
       }
       public void onNothingSelected(AdapterView<?> parent) 
       {
@@ -521,28 +496,31 @@ public class EX03_01 extends TabActivity {
     /*最外圍↓*/
     }
     
-        
-
-    
-  
-  
-  
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
+  {  
+         CheckBox checkBox = (CheckBox) view.findViewById(R.id.CheckBox02);  
+            
+          checkBox.toggle();  
+          
+       //openOptionsDialog(Integer.toString(position));
+            
+          mSimpleAdapter.map.put(position, checkBox.isChecked());  
+            
+  }  
   
   private void updateListView()
   {
     // TODO Auto-generated method stub
-    
   }
 
-
-
-    @Override 
-    public boolean onCreateOptionsMenu(Menu menu) {
+  @Override 
+  public boolean onCreateOptionsMenu(Menu menu) {
       // TODO Auto-generated method stub  
       MenuInflater menuInflater = getMenuInflater();  
       menuInflater.inflate(R.layout.tab2_item, menu);  
       return true; 
       }
+    
       public boolean onOptionsItemSelected(MenuItem item) 
       {  // TODO Auto-generated method stub  
         switch(item.getItemId()){  
@@ -556,8 +534,6 @@ public class EX03_01 extends TabActivity {
         return true; 
         
       }
-  
-  
   
   private void updateDisplay() {
     mtime.setToNow(); //取得現在時間

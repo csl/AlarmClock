@@ -11,4 +11,21 @@
 <string name="str_text1">開始時間</string>
 <string name="str_text2">重複響起間隔</string>
 <string name="str_text3">秒</string>
+
+<string-array name="ispinner_list">  
+<item>每天</item>  
+<item>星期一</item>  
+<item>星期二</item>  
+<item>星期三</item>  
+<item>星期四</item>  
+<item>星期五</item>  
+<item>星期六</item>  
+<item>星期日</item>
+</string-array>
+
+<string-array name="game">  
+<item>打地鼠</item>  
+<item>數學題目</item>  
+</string-array>
+
 </resources>

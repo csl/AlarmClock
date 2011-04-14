@@ -25,16 +25,6 @@
     android:layout_x="10px"
     android:layout_y="172px"
   />
-  <TextView
-    android:id="@+id/text2"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/str_text2"
-    android:textColor="@drawable/white"
-   	android:textSize="16sp"
-    android:layout_x="10px"
-    android:layout_y="172px"
-  />  
   <TimePicker
     android:id="@+id/tPicker"
     android:layout_width="wrap_content"
