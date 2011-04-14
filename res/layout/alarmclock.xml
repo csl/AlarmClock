@@ -11,7 +11,7 @@ android:layout_width="fill_parent"
 android:layout_height="fill_parent"
 >
 <TextView
-android:id="@+id/widget35"
+android:id="@+id/alarmclock_message"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:text="新增鬧鐘"
@@ -23,10 +23,10 @@ android:layout_y="6px"
 </TextView>
 <Button
 android:id="@+id/delete_b"
-android:layout_width="60px"
+android:layout_width="70px"
 android:layout_height="40px"
 android:text="刪除"
-android:textSize="20sp"
+android:textSize="15sp"
 android:layout_x="230px"
 android:layout_y="6px"
 >
@@ -74,7 +74,7 @@ android:id="@+id/widget40"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:text="間隔"
-android:textSize="20sp"
+android:textSize="16sp"
 android:layout_x="19px"
 android:layout_y="243px"
 >
@@ -82,9 +82,9 @@ android:layout_y="243px"
 <EditText
 android:id="@+id/section"
 android:layout_width="67px"
-android:layout_height="32px"
+android:layout_height="38px"
 android:text="15"
-android:textSize="18sp"
+android:textSize="14sp"
 android:layout_x="73px"
 android:layout_y="244px"
 >
@@ -112,11 +112,12 @@ android:layout_y="283px"
 <Spinner
 android:id="@+id/repeat"
 android:layout_width="181px"
-android:layout_height="29px"
+android:layout_height="36px"
 android:layout_x="112px"
 android:layout_y="286px"
 >
 </Spinner>
+
 <TextView
 android:id="@+id/widget44"
 android:layout_width="wrap_content"
@@ -130,7 +131,7 @@ android:layout_y="325px"
 <Spinner
 android:id="@+id/cgame"
 android:layout_width="181px"
-android:layout_height="29px"
+android:layout_height="36px"
 android:layout_x="126px"
 android:layout_y="325px"
 >

@@ -1,5 +1,6 @@
 package irdc.ex03_01;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +17,7 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -41,8 +43,7 @@ public class alarmclock extends Activity
   private Spinner rt;
   private Spinner game;
   private TimePicker tPicker;
-
-  private AlertDialog.Builder builder;
+  private String alarmclock_name;
   
   private Bundle bunde;
   private Intent intent;
@@ -50,7 +51,11 @@ public class alarmclock extends Activity
   private String next_id;
   private String list_item;
   private Long id;
+  private int weekofday;
+  private int gameid;
   private String ThisID;
+  
+  private TextView alarmclock_message;
 
   private AlertDialog.Builder builderr;
   
@@ -74,12 +79,15 @@ public class alarmclock extends Activity
       list_item = bunde.getString("list_item");  
 
       am = (EditText) findViewById(R.id.alarmname);
-  		ed = (EditText) findViewById(R.id.section);
-  		rt = (Spinner) findViewById(R.id.repeat);
+  		 ed = (EditText) findViewById(R.id.section);
+  		 rt = (Spinner) findViewById(R.id.repeat);
       tPicker=(TimePicker)findViewById(R.id.tpr);
+      tPicker.setIs24HourView(true);
       game = (Spinner) findViewById(R.id.cgame);
+      alarmclock_message = (TextView) findViewById(R.id.alarmclock_message);
 
       builderr = new AlertDialog.Builder(this);
+
 
   		//add repeat spinner
   		String ispinner_list[] = this.getResources().getStringArray(R.array.ispinner_list);
@@ -93,6 +101,9 @@ public class alarmclock extends Activity
       adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       game.setAdapter(adapter2);
       
+      Calendar cal = Calendar.getInstance();    
+      int w = cal.get(Calendar.DAY_OF_WEEK);
+      
       Button delete_b = (Button) findViewById(R.id.delete_b);
       delete_b.setOnClickListener(new Button.OnClickListener()
       {
@@ -105,13 +116,27 @@ public class alarmclock extends Activity
                     public void onClick(DialogInterface dialog, int id)
                     {
                       //delete database item
+                      int finddata = 
+                        EX03_01.dbHelper.delete(tables[1], "alarm_name='" + alarmclock_name + "'",  null);
 
                       AlarmManager am  = (AlarmManager) getSystemService(ALARM_SERVICE);
                       
-                      //取消鬧鐘
+                        //取消鬧鐘
                       Intent intent = new Intent(alarmclock.this, CallAlarm.class);
+                      intent.setData(Uri.parse("content://calendar/calendar_alerts/1"));  
+                      intent.putExtra("weekofday", weekofday);
+                      intent.putExtra("gameid", gameid);
                       PendingIntent pi = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(ThisID), intent, 0);
                       am.cancel(pi);
+                      
+                      intent = new Intent();
+                      intent.setClass(alarmclock.this, EX03_01.class);
+
+                      startActivity(intent);
+                      alarmclock.this.finish();   
+
+                      
+                      
                     }
                 });
                
@@ -122,11 +147,13 @@ public class alarmclock extends Activity
                     }
                 });
                 
-                AlertDialog alert = builder.create();
+                AlertDialog alert = builderr.create();
                 alert.show();
              
               }
       });
+
+      Button additem=(Button) findViewById(R.id.add);
 
       if (id == 0)
       {
@@ -138,37 +165,47 @@ public class alarmclock extends Activity
       {
         //find ThisID
         StringTokenizer Tok = new StringTokenizer(list_item, ",");
-        String name = (String) Tok.nextElement();
+        alarmclock_name = (String) Tok.nextElement();
         String time =  (String) Tok.nextElement();
+        alarmclock_message.setText("修改鬧鐘");
+        additem.setText("修改");
+        am.setText(alarmclock_name);
         
-        
-        Cursor finddata = 
-          EX03_01.dbHelper.select(tables[1], fieldNames[1], "alarm_name='" + name + "' and alarm_hourmin='" + time + "'", null, null, null, null);
-        /*
-        finddata.moveToNext();
-        
-        ThisID = finddata.getString(0);
-        am.setText(name);
-
         StringTokenizer Tokr = new StringTokenizer(time, ":");
-        String hour = (String) Tok.nextElement();
-        String min =  (String) Tok.nextElement();
+        int count= 0;
+        String hour="",min="";
+        
+        while (Tokr.hasMoreTokens())
+        {
+          if (count == 0)
+            hour = (String) Tokr.nextElement();
+          else if(count == 1)
+            min =  (String) Tokr.nextElement();
+          
+          count++;
+        }
         
         tPicker.setCurrentHour(Integer.valueOf(hour));
         tPicker.setCurrentMinute(Integer.valueOf(min));
-        ed.setText(finddata.getString(3));
-        rt.setSelection(Integer.valueOf(finddata.getString(4)));
-        game.setSelection(Integer.valueOf(finddata.getString(5)));
-*/        
+       
+        Cursor finddata = 
+          EX03_01.dbHelper.select(tables[1], fieldNames[1], "alarm_name='" + alarmclock_name + "'", null, null, null, null);
+        
+        while (finddata.moveToNext())
+        {
+          ThisID = finddata.getString(0);
+          ed.setText(finddata.getString(3));
+          weekofday = Integer.valueOf(finddata.getString(4));
+          rt.setSelection(Integer.valueOf(finddata.getString(4)));
+          game.setSelection(Integer.valueOf(finddata.getString(5)));
+          gameid=Integer.valueOf(finddata.getString(5));
+        }
 
         
-        delete_b.setEnabled(true);      
-      }
+        delete_b.setEnabled(true);           
+        }
   		  		
-      
-      
       //add button
-      Button additem=(Button) findViewById(R.id.add);
       additem.setOnClickListener(new Button.OnClickListener()
       {
               public void onClick(View v)
@@ -183,29 +220,35 @@ public class alarmclock extends Activity
                   
                   /* 取得設定的開始時間，秒及毫秒設為0 */
                   aclock.setTimeInMillis(System.currentTimeMillis());
-                  //aclock.set(Calendar.DAY_OF_WEEK_IN_MONTH, Calendar.WEDNESDAY);
                   aclock.set(Calendar.HOUR_OF_DAY, tPicker.getCurrentHour());
                   aclock.set(Calendar.MINUTE, tPicker.getCurrentMinute());
                   aclock.set(Calendar.SECOND,0);
                   aclock.set(Calendar.MILLISECOND,0);
                   
                   /* 更新顯示的設定鬧鐘時間 */    
-                  String tmpS = format(tPicker.getCurrentHour())+"："+
+                  String tmpS = format(tPicker.getCurrentHour())+":"+
                               format(tPicker.getCurrentMinute());
 
                   if (id == 0)
-                  {
+                    {
                     //寫入資料庫
-                    String a[] = {next_id, alarmname, tmpS , Integer.toString(times/1000), Integer.toString(repeat),  Integer.toString(rrgame)};         
+                    String a[] = {next_id, alarmname, tmpS, Integer.toString(times/1000), Integer.toString(repeat),  Integer.toString(rrgame)};         
                     long rowid = EX03_01.dbHelper.insert(tables[1], fieldNames[1] , a);  
                     
+                    weekofday = repeat;
+                    gameid = rrgame;
+
                     /* 指定鬧鐘設定時間到時要執行CallAlarm.class */
                     Intent intent = new Intent(alarmclock.this, CallAlarm.class);
+                    intent.setData(Uri.parse("content://calendar/calendar_alerts/1"));  
+                    intent.putExtra("weekofday", weekofday);
+                    intent.putExtra("gameid", gameid);
+                    
                     PendingIntent sender = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(next_id) , intent, 0);
                     
                     /* setRepeating()可讓鬧鐘重覆執行 */
                     AlarmManager am  = (AlarmManager) getSystemService(ALARM_SERVICE);
-                    am.setRepeating(AlarmManager.RTC_WAKEUP, aclock.getTimeInMillis(), times, sender);
+                    am.set(AlarmManager.RTC_WAKEUP, aclock.getTimeInMillis(), /*times,*/ sender);
     
                     /* 以Toast提示設定已完成 */
                     Toast.makeText(alarmclock.this,"設定鬧鐘時間為" + tmpS
@@ -215,16 +258,27 @@ public class alarmclock extends Activity
                   else
                   {
                     //寫入資料庫
-                    //String a[] = {id, alarmname, tmpS , Integer.toString(times/1000), Integer.toString(repeat),  Integer.toString(rrgame)};         
-                    //long rowid = EX03_01.dbHelper.insert(tables[1], fieldNames[1] , a);  
+                  String a[] = {ThisID, alarmname, tmpS , Integer.toString(times/1000), Integer.toString(repeat),  Integer.toString(rrgame)};         
+                  long rowid = EX03_01.dbHelper.update(tables[1], fieldNames[1] , a, "alarm_name='" + alarmclock_name + "'", null);  
                     
-                    /* 指定鬧鐘設定時間到時要執行CallAlarm.class */
-                    //Intent intent = new Intent(alarmclock.this, CallAlarm.class);
-                    //PendingIntent sender = PendingIntent.getBroadcast(alarmclock.this, 0/*Integer.valueOf(id)*/, intent, 0);
+                    //先取消
+                  AlarmManager am  = (AlarmManager) getSystemService(ALARM_SERVICE);
+                  
+                    //取消鬧鐘
+                  Intent intent = new Intent(alarmclock.this, CallAlarm.class);
+                  PendingIntent pi = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(ThisID), intent, 0);
+                  am.cancel(pi);
+
+                    /* 重新指定鬧鐘設定時間到時要執行CallAlarm.class */
+                  intent = new Intent(alarmclock.this, CallAlarm.class);
+                  intent.setData(Uri.parse("content://calendar/calendar_alerts/1"));  
+                  intent.putExtra("weekofday", weekofday);
+                  intent.putExtra("gameid", gameid);
+                  PendingIntent sender = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(ThisID), intent, 0);
                     
                     /* setRepeating()可讓鬧鐘重覆執行 */
-                    //AlarmManager am  = (AlarmManager) getSystemService(ALARM_SERVICE);
-                    //am.setRepeating(AlarmManager.RTC_WAKEUP, aclock.getTimeInMillis(), times, sender);
+                   AlarmManager ama  = (AlarmManager) getSystemService(ALARM_SERVICE);
+                   am.set(AlarmManager.RTC_WAKEUP, aclock.getTimeInMillis(), /*times,*/ sender);
     
                     /* 以Toast提示設定已完成 */
                     Toast.makeText(alarmclock.this,"修改完成，設定鬧鐘時間為" + tmpS

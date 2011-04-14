@@ -375,60 +375,6 @@ public class EX03_01 extends TabActivity implements OnItemClickListener{
     final TimePicker tPicker=(TimePicker)setView.findViewById(R.id.tPicker);
     tPicker.setIs24HourView(true);
 
-    final AlertDialog di = new AlertDialog.Builder(EX03_01.this)
-    .setIcon(R.drawable.clock_icon)
-    .setTitle("設定")
-    .setView(setView)
-    .setPositiveButton("確定",new DialogInterface.OnClickListener()
-     {
-       public void onClick(DialogInterface dialog, int which)
-       {
-         /* 取得設定的間隔秒數 */
-         EditText ed=(EditText)setView.findViewById(R.id.mEdit);
-         int times=Integer.parseInt(ed.getText().toString())*1000;
-         
-         /* 取得設定的開始時間，秒及毫秒設為0 */
-         aclock.setTimeInMillis(System.currentTimeMillis());
-         aclock.set(Calendar.HOUR_OF_DAY, tPicker.getCurrentHour());
-         aclock.set(Calendar.MINUTE, tPicker.getCurrentMinute());
-         aclock.set(Calendar.SECOND,0);
-         aclock.set(Calendar.MILLISECOND,0);
-         
-         /* 指定鬧鐘設定時間到時要執行CallAlarm.class */
-         Intent intent = new Intent(EX03_01.this, CallAlarm.class);
-         PendingIntent sender = PendingIntent.getBroadcast(EX03_01.this, Integer.valueOf(next_id), intent, 0);
-         
-         /* setRepeating()可讓鬧鐘重覆執行 */
-         AlarmManager am  = (AlarmManager) getSystemService(ALARM_SERVICE);
-         am.setRepeating(AlarmManager.RTC_WAKEUP, aclock.getTimeInMillis(), times, sender);
-         
-
-         /* 更新顯示的設定鬧鐘時間 */    
-         String tmpS = format(tPicker.getCurrentHour())+"："+
-                     format(tPicker.getCurrentMinute());
-         
-         //setTime2.setText("設定鬧鐘時間為"+tmpS+"開始，重覆間隔為" + times/1000 + "秒");
-         
-         //寫入資料庫
-         //String a[] = {tmpS , Integer.toString(times/1000) };         
-         //long rowid = dbHelper.insert(tables[0], fieldNames[1] , a);  
-         
-         updateListView();
-
-         /* 以Toast提示設定已完成 */
-         Toast.makeText(EX03_01.this,"設定鬧鐘時間為" + tmpS
-                        +"開始，重覆間隔為"+times/1000+"秒",
-             Toast.LENGTH_SHORT).show();
-       }
-     })
-    .setNegativeButton("取消",new DialogInterface.OnClickListener()
-     {
-       public void onClick(DialogInterface dialog, int which)
-       {
-       }
-     }).create();
-
-    
     //tab3的item
 /*    
     alarmclock_list = new ArrayList<HashMap<String,Object>>();
