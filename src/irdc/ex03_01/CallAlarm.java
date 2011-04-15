@@ -24,8 +24,7 @@ public class CallAlarm extends BroadcastReceiver
     {
       if (gameid == 0)
       {
-        Intent i = new Intent(context, AlarmAlert.class);
-        
+        Intent i = new Intent(context, MathProblem.class);
         Bundle bundleRet = new Bundle();
         bundleRet.putString("STR_CALLER", "123");
         i.putExtras(bundleRet);
@@ -34,7 +33,7 @@ public class CallAlarm extends BroadcastReceiver
       }
       else  if (gameid == 1)
       {
-        Intent i = new Intent(context, AlarmAlert.class);
+        Intent i = new Intent(context, MathProblem.class);
         
         Bundle bundleRet = new Bundle();
         bundleRet.putString("STR_CALLER", "456");

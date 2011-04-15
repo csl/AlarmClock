@@ -62,10 +62,14 @@ public class EX03_01 extends TabActivity implements OnItemClickListener{
   private ArrayList<String> sp;
   
   private int next_id;
-  private String tables[] = { "sleeptb", "alarmclock" }; //資料庫資料表
+  //private String tables[] = { "sleeptb", "alarmclock" }; //資料庫資料表
+  private String tables[] = { "sleeptb" , "timetb","besttime","dream", "alarmclock"}; //資料庫資料表
   private String fieldNames[][] =     /* 資料庫欄位名稱 */
   {
     { "sleep_id", "sleep_day","wakeup_day", "sleep_time", "wakeup_time" ,"longtime_hour","longtime_min"},
+    {"passid","hourlong","timelong"},
+    {"bestid","besettime"},
+    {"dream01"},    
     { "alarm_id", "alarm_name", "alarm_hourmin", "alarm_section", "alarm_repeat", "alarm_game"}
   };
   
@@ -73,7 +77,10 @@ public class EX03_01 extends TabActivity implements OnItemClickListener{
   private String fieldTypes[][] =
   {
     { "INTEGER PRIMARY KEY AUTOINCREMENT", "text" , "text", "text", "text","text","text"},
-    { "INTEGER PRIMARY KEY AUTOINCREMENT", "text" , "text", "text", "text", "text"}
+    { "text", "text", "text"},
+    {"text","text"},
+    {"text"},    
+    { "INTEGER PRIMARY KEY AUTOINCREMENT", "text" , "text", "text", "text", "text"}    
   };
 
   Intent intent = new Intent();
@@ -390,7 +397,7 @@ public class EX03_01 extends TabActivity implements OnItemClickListener{
     alarmclock_view = (ListView) findViewById(R.id.tab3_itemview);
     /*setOnItemClickListener*/
     
-    Cursor alarmclock_tab3 = dbHelper.select(tables[1], fieldNames[1], null, null, null, null, null);   
+    Cursor alarmclock_tab3 = dbHelper.select(tables[4], fieldNames[4], null, null, null, null, null);   
     
     sp = new ArrayList<String>();
 
@@ -429,7 +436,8 @@ public class EX03_01 extends TabActivity implements OnItemClickListener{
           intent.setClass(EX03_01.this, alarmclock.class);
           intent.putExtras(bundle);
           startActivity(intent);
-          
+          EX03_01.this.finish();   
+
       }
       public void onNothingSelected(AdapterView<?> parent) 
       {

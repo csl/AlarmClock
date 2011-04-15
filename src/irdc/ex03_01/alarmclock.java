@@ -59,13 +59,15 @@ public class alarmclock extends Activity
 
   private AlertDialog.Builder builderr;
   
-  private String tables[] = { "sleeptb", "alarmclock" }; //資料庫資料表
+  private String tables[] = { "sleeptb" , "timetb","besttime","dream", "alarmclock"}; //資料庫資料表
   private String fieldNames[][] =     /* 資料庫欄位名稱 */
   {
     { "sleep_id", "sleep_day","wakeup_day", "sleep_time", "wakeup_time" ,"longtime_hour","longtime_min"},
+    {"passid","hourlong","timelong"},
+    {"bestid","besettime"},
+    {"dream01"},    
     { "alarm_id", "alarm_name", "alarm_hourmin", "alarm_section", "alarm_repeat", "alarm_game"}
   };
-  
   public void onCreate(Bundle savedInstanceState)
 	{
 	    super.onCreate(savedInstanceState);
@@ -117,7 +119,7 @@ public class alarmclock extends Activity
                     {
                       //delete database item
                       int finddata = 
-                        EX03_01.dbHelper.delete(tables[1], "alarm_name='" + alarmclock_name + "'",  null);
+                        EX03_01.dbHelper.delete(tables[4], "alarm_name='" + alarmclock_name + "'",  null);
 
                       AlarmManager am  = (AlarmManager) getSystemService(ALARM_SERVICE);
                       
@@ -126,7 +128,7 @@ public class alarmclock extends Activity
                       intent.setData(Uri.parse("content://calendar/calendar_alerts/1"));  
                       intent.putExtra("weekofday", weekofday);
                       intent.putExtra("gameid", gameid);
-                      PendingIntent pi = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(ThisID), intent, 0);
+                      PendingIntent pi = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(ThisID), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                       am.cancel(pi);
                       
                       intent = new Intent();
@@ -189,7 +191,7 @@ public class alarmclock extends Activity
         tPicker.setCurrentMinute(Integer.valueOf(min));
        
         Cursor finddata = 
-          EX03_01.dbHelper.select(tables[1], fieldNames[1], "alarm_name='" + alarmclock_name + "'", null, null, null, null);
+          EX03_01.dbHelper.select(tables[4], fieldNames[4], "alarm_name='" + alarmclock_name + "'", null, null, null, null);
         
         while (finddata.moveToNext())
         {
@@ -233,7 +235,7 @@ public class alarmclock extends Activity
                     {
                     //寫入資料庫
                     String a[] = {next_id, alarmname, tmpS, Integer.toString(times/1000), Integer.toString(repeat),  Integer.toString(rrgame)};         
-                    long rowid = EX03_01.dbHelper.insert(tables[1], fieldNames[1] , a);  
+                    long rowid = EX03_01.dbHelper.insert(tables[4], fieldNames[4] , a);  
                     
                     weekofday = repeat;
                     gameid = rrgame;
@@ -244,7 +246,7 @@ public class alarmclock extends Activity
                     intent.putExtra("weekofday", weekofday);
                     intent.putExtra("gameid", gameid);
                     
-                    PendingIntent sender = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(next_id) , intent, 0);
+                    PendingIntent sender = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(next_id) , intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     
                     /* setRepeating()可讓鬧鐘重覆執行 */
                     AlarmManager am  = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -259,14 +261,14 @@ public class alarmclock extends Activity
                   {
                     //寫入資料庫
                   String a[] = {ThisID, alarmname, tmpS , Integer.toString(times/1000), Integer.toString(repeat),  Integer.toString(rrgame)};         
-                  long rowid = EX03_01.dbHelper.update(tables[1], fieldNames[1] , a, "alarm_name='" + alarmclock_name + "'", null);  
+                  long rowid = EX03_01.dbHelper.update(tables[4], fieldNames[4] , a, "alarm_name='" + alarmclock_name + "'", null);  
                     
                     //先取消
                   AlarmManager am  = (AlarmManager) getSystemService(ALARM_SERVICE);
                   
                     //取消鬧鐘
                   Intent intent = new Intent(alarmclock.this, CallAlarm.class);
-                  PendingIntent pi = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(ThisID), intent, 0);
+                  PendingIntent pi = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(ThisID), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                   am.cancel(pi);
 
                     /* 重新指定鬧鐘設定時間到時要執行CallAlarm.class */
@@ -274,7 +276,7 @@ public class alarmclock extends Activity
                   intent.setData(Uri.parse("content://calendar/calendar_alerts/1"));  
                   intent.putExtra("weekofday", weekofday);
                   intent.putExtra("gameid", gameid);
-                  PendingIntent sender = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(ThisID), intent, 0);
+                  PendingIntent sender = PendingIntent.getBroadcast(alarmclock.this, Integer.valueOf(ThisID), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     
                     /* setRepeating()可讓鬧鐘重覆執行 */
                    AlarmManager ama  = (AlarmManager) getSystemService(ALARM_SERVICE);

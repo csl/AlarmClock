@@ -9,6 +9,10 @@
     android:label="@string/app_name">
     <receiver android:name="CallAlarm" android:process=":remote" />
 
+    <activity android:name="WhacAMole" >
+
+    </activity>
+
     <activity android:name="hard">
 
     </activity>
@@ -20,6 +24,10 @@
         <activity android:name="music">
 
     </activity>
+        <activity android:name="MathProblem">
+
+    </activity>
+    
         <activity android:name="dream">
 
     </activity>
