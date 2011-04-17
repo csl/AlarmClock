@@ -24,7 +24,7 @@ public class CallAlarm extends BroadcastReceiver
     {
       if (gameid == 0)
       {
-        Intent i = new Intent(context, MathProblem.class);
+        Intent i = new Intent(context, WhacAMole.class);
         Bundle bundleRet = new Bundle();
         bundleRet.putString("STR_CALLER", "123");
         i.putExtras(bundleRet);

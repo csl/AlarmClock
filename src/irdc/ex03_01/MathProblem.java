@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,24 +19,16 @@ public class MathProblem extends Activity
   private static Random random = new Random();
   private Handler handler = new Handler();
   
+  private int [] ButtonArray  = new int[10];
+  private boolean [] Buttond  = new boolean[10];
+  
   private TextView question;
   private TextView answer;
   
-  private Button numtop1;
-  private Button numtop2;
-  private Button numtop3;
-
-  private Button nummiddle1;
-  private Button nummiddle2;
-  private Button nummiddle3;
-
-  private Button numbottom1;
-  private Button numbottom2;
-  private Button numbottom3;
-  private Button numbottom4;
+  private ImageButton []  num = new ImageButton[10];
 
   private Button clear;
-  private Button ek;
+  private ImageButton ek;
 
   private String answer_str;
   private int equal;
@@ -54,29 +47,81 @@ public class MathProblem extends Activity
     //GUI
     question = (TextView)findViewById(R.id.Question);
     answer = (TextView)findViewById(R.id.answer);
-    numtop1 = (Button)findViewById(R.id.numtop1);
-    numtop2 = (Button)findViewById(R.id.numtop2);
-    numtop3 = (Button)findViewById(R.id.numtop3);
-    nummiddle1 = (Button)findViewById(R.id.nummid1);
-    nummiddle2 = (Button)findViewById(R.id.nummid2);
-    nummiddle3 = (Button)findViewById(R.id.nummid3);
-    numbottom1 = (Button)findViewById(R.id.numbottom1);
-    numbottom2 = (Button)findViewById(R.id.numbottom2);
-    numbottom3 = (Button)findViewById(R.id.numbottom3);
-    numbottom4 = (Button)findViewById(R.id.numbottom4);
+    num[0] = (ImageButton)findViewById(R.id.numtop1);
+    num[1] = (ImageButton)findViewById(R.id.numtop2);
+    num[2] = (ImageButton)findViewById(R.id.numtop3);
+    num[3] = (ImageButton)findViewById(R.id.nummid1);
+    num[4] = (ImageButton)findViewById(R.id.nummid2);
+    num[5] = (ImageButton)findViewById(R.id.nummid3);
+    num[6] = (ImageButton)findViewById(R.id.numbottom1);
+    num[7] = (ImageButton)findViewById(R.id.numbottom2);
+    num[8] = (ImageButton)findViewById(R.id.numbottom3);
+    num[9] = (ImageButton)findViewById(R.id.numbottom4);
     clear = (Button)findViewById(R.id.clear);
-    ek = (Button)findViewById(R.id.ek);
+    ek = (ImageButton)findViewById(R.id.ek);
     
-    numtop1.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(numtop1.getText().toString()));}});
-    numtop2.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(numtop2.getText().toString())); }});
-    numtop3.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(numtop3.getText().toString())); }});
-    nummiddle1.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(nummiddle1.getText().toString())); }});
-    nummiddle2.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(nummiddle2.getText().toString())); }});
-    nummiddle3.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(nummiddle3.getText().toString())); }});
-    numbottom1.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(numbottom1.getText().toString())); }});
-    numbottom2.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(numbottom2.getText().toString())); }});
-    numbottom3.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(numbottom3.getText().toString())); }});
-    numbottom4.setOnClickListener(new Button.OnClickListener() { public void onClick (View v){ handleNumber(Integer.valueOf(numbottom4.getText().toString())); }});
+    ImageButton_layout();
+    
+    num[0].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v)
+       { 
+        handleNumber(ButtonArray[0]);
+       }
+      });
+
+    num[1].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v){ 
+        handleNumber(ButtonArray[1]); 
+        }
+      });
+    
+    num[2].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v){ 
+        handleNumber(ButtonArray[2]); 
+        }
+      });
+    
+    num[3].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v){ 
+        handleNumber(ButtonArray[3]); 
+        }
+      });
+    
+    num[4].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v){ 
+        handleNumber(ButtonArray[4]); 
+        }
+      });
+    
+    num[5].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v){ 
+        handleNumber(ButtonArray[5]); 
+        }
+      });
+    
+    num[6].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v){ 
+        handleNumber(ButtonArray[6]); 
+        }
+      });
+    
+    num[7].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v){ 
+        handleNumber(ButtonArray[7]); 
+        }
+      });
+    
+    num[8].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v){ 
+        handleNumber(ButtonArray[8]); 
+      }
+      });
+    
+    num[9].setOnClickListener(new Button.OnClickListener() { 
+      public void onClick (View v){ 
+        handleNumber(ButtonArray[9]); 
+        }
+      });
 
     clear.setOnClickListener(new Button.OnClickListener() { 
         public void onClick (View v){ 
@@ -190,6 +235,62 @@ public class MathProblem extends Activity
     question.setText(qestion); 
   }
   
+  private void ImageButton_layout()
+  {
+    int index = 0;
+    
+    for (int i=0; i <10; i++)
+    {
+      Buttond[i] = false;
+    }
+    
+    for (int i=0; i <10; i++)
+    {
+      index = random.nextInt(10);
+      while (Buttond[index])
+      {
+        index = random.nextInt(10);
+      }
+      
+      ButtonArray[i] = index;
+      Buttond[index] = true;
+      
+      switch (index)
+      {
+        case 0:
+            num[i].setImageResource(R.drawable.num0);
+            break;
+        case 1:
+            num[i].setImageResource(R.drawable.num1);
+            break;
+        case 2:
+            num[i].setImageResource(R.drawable.num2);
+            break;
+        case 3:
+            num[i].setImageResource(R.drawable.num3);
+            break;
+        case 4:
+            num[i].setImageResource(R.drawable.num4);
+            break;
+        case 5:
+            num[i].setImageResource(R.drawable.num5);
+            break;
+        case 6:
+            num[i].setImageResource(R.drawable.num6);
+            break;
+        case 7:
+            num[i].setImageResource(R.drawable.num7);
+            break;
+        case 8:
+            num[i].setImageResource(R.drawable.num8);
+            break;
+        case 9:
+            num[i].setImageResource(R.drawable.num9);
+            break;
+      }
+    }
+  }
+  
   private void handleNumber(int num)
   {
     answer_str = answer_str + String.valueOf(num);
@@ -198,7 +299,10 @@ public class MathProblem extends Activity
   
   private Runnable updateTimer = new Runnable() {
     public void run() {
-        handler.postDelayed(this, 1000);
+      
+        ImageButton_layout();
+
+        handler.postDelayed(this, 5000);
     }
 };
   

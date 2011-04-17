@@ -136,9 +136,6 @@ public class alarmclock extends Activity
 
                       startActivity(intent);
                       alarmclock.this.finish();   
-
-                      
-                      
                     }
                 });
                
@@ -256,6 +253,7 @@ public class alarmclock extends Activity
                     Toast.makeText(alarmclock.this,"設定鬧鐘時間為" + tmpS
                                    +"開始，重覆間隔為"+times/1000+"秒",
                         Toast.LENGTH_SHORT).show();
+                    
                   }
                   else
                   {
@@ -287,7 +285,15 @@ public class alarmclock extends Activity
                                    +"開始，重覆間隔為"+times/1000+"秒",
                         Toast.LENGTH_SHORT).show();
                   }
+
+                  intent = new Intent();
+                  intent.setClass(alarmclock.this, EX03_01.class);
+
+                  startActivity(intent);
+                  alarmclock.this.finish();   
+              
               }
+              
       }
       
      );

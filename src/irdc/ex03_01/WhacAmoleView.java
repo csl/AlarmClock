@@ -11,18 +11,42 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class WhacAmoleView extends View{
 	
-	private static Random random = new Random();
+	static Random random = new Random();
+	static int WhacAmoleScore;
+	private int[][] MatrixMap = new int[3][4];
+	static int StageNum = 3;	
+	static int Stage = 0;
+  static int RandomMatrixMapX = 0;
+  static int RandomMatrixMapY = 0;
+  static int Randomclick = 0;
 	
 	public WhacAmoleView(Context context) {
 		super(context);
 		self = this;
+		
+		WhacAmoleScore = 0;
+		Stage = 0;
+		
+		RandomMatrixMapX = random.nextInt(4) + 1;
+   RandomMatrixMapY = random.nextInt(3) + 1;
+   Randomclick =  random.nextInt(2) +1;
+		
 		WhacAmoleView.this.postDelayed(flush80ms, 80);
 		WhacAmoleView.this.postDelayed(flush1000ms, 1000);
+		
+		for (int i=0; i<3; i++)
+		{
+	    for (int j=0; j<4; j++)
+	    {
+	      MatrixMap[i][j] = 0;
+	    }		  
+		}
 	}
 	
 	private List<Pic> holeQuite = new ArrayList<Pic>(Constants.HOLE_COUNT);
@@ -40,9 +64,11 @@ public class WhacAmoleView extends View{
 	
 	
 	@Override
-	protected void onDraw(Canvas canvas) {
+	protected void onDraw(Canvas canvas) 
+	{
 		super.onDraw(canvas);
-		if(hp<=0||progress<aimProgress){
+		
+		if(WhacAmoleScore>=60){
 			getHandler().removeCallbacks(flush1000ms);
 			getHandler().removeCallbacks(flush80ms);
 			doGameOver();
@@ -75,17 +101,29 @@ public class WhacAmoleView extends View{
 			
 			public void onClick(DialogInterface dialog, int which) {
 			  WhacAMole kk = (WhacAMole)getContext();
+
+			  WhacAmoleScore = 0;
+		    for (int i=0; i<3; i++)
+		    {
+		      for (int j=0; j<4; j++)
+		      {
+		        Log.d("TAG",i + " " + j +  " " +MatrixMap[i][j]);
+		        MatrixMap[i][j] = 0;
+		      }     
+		    }
 				kk.resetGame();
 			}
 		}).show();
 	}
 
-	public int hp = 20;
+	public int hp = 40;
 	public int progress = 800;
 	public int aimProgress = 0;
-	private void drawInfoPanel(Canvas canvas){
-		canvas.drawText("HP:" + hp, 29, 20, PaintSuite.KV4text);
-		canvas.drawText("Prgoress:" + (int)((800-progress)*100/800) + "%", 29, 50, PaintSuite.KV4text);
+	
+	private void drawInfoPanel(Canvas canvas)
+	{
+		canvas.drawText("rule: (" + RandomMatrixMapX +  ","  + RandomMatrixMapY + ")," + "click " + Randomclick, 29, 20, PaintSuite.KV4text);
+		canvas.drawText("Score:" + WhacAmoleScore , 29, 50, PaintSuite.KV4text);
 	}
 
 
@@ -100,11 +138,13 @@ public class WhacAmoleView extends View{
 		public void run(){
 			
 			LinkedList<Pic> temp = new LinkedList<Pic>();
-			for(Pic each : holeQuite){
+			for(Pic each : holeQuite)
+			{
 				if(each.currentType == Pic.NOTHING){
 					temp.add(each);
 				}
 			}
+			
 			int size = temp.size();
 			if(size == 1){
 				temp.poll().toShow();
@@ -120,27 +160,31 @@ public class WhacAmoleView extends View{
 			progress -= 10;
 		}
 	};
+	
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if(event.getAction() != MotionEvent.ACTION_UP){
+	public boolean onTouchEvent(MotionEvent event) 
+	{
+		if(event.getAction() != MotionEvent.ACTION_UP)
+		{
 			return true;
 		}
-		
-		
+
 		float x = event.getX();
 		float y = event.getY();
-		
-		
+
 		float offsetIndexX = x - startX;
-		float offsetIndexY = y -startY;
+		float offsetIndexY = y - startY;
+		
 		int indexX = (int)offsetIndexX / 80;
 		int indexY = (int)offsetIndexY / 80;
-		if(indexX>=3 || indexX <0 || indexY>=4|| indexY<0){
+		
+		if(indexX>=3 || indexX <0 || indexY>=4|| indexY<0)
+		{
 			return true;
 		}
 		
-		holeQuite.get(indexY* 3 + indexX).click();
+		holeQuite.get(indexY* 3 + indexX).click(indexX, indexY, MatrixMap);
 		return true;
 	}
 }
