@@ -211,6 +211,23 @@ public class alarmclock extends Activity
               {           
                 /* 取得設定的間隔秒數 */
                   String alarmname = am.getText().toString();
+                  
+                  Cursor finddata = 
+                    EX03_01.dbHelper.select(tables[4], fieldNames[4], "alarm_name='" + alarmname + "'", null, null, null, null);
+                  
+                  int count=0;
+                  while (finddata.moveToNext())
+                    {
+                      count++;
+                    }
+                  
+                  if (count != 0)
+                    {
+                    Toast.makeText(alarmclock.this,"鬧鐘名稱不能相同, 請重新輸入", Toast.LENGTH_SHORT).show();
+                    
+                        return;
+                    }
+                  
                   int times = Integer.parseInt(ed.getText().toString())*1000;
                   int repeat = rt.getSelectedItemPosition();
                   int rrgame = game.getSelectedItemPosition();

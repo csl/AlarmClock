@@ -94,24 +94,14 @@ public class WhacAmoleView extends View{
 	
 	private void doGameOver() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setTitle("Game Over");
-		builder.setMessage("CLick for new Game");
+		builder.setTitle("");
+		builder.setMessage("遊戲結束了, 起床!!");
 		builder.setCancelable(false);
 		builder.setNeutralButton("CLick", new android.content.DialogInterface.OnClickListener() {
 			
-			public void onClick(DialogInterface dialog, int which) {
-			  WhacAMole kk = (WhacAMole)getContext();
-
-			  WhacAmoleScore = 0;
-		    for (int i=0; i<3; i++)
-		    {
-		      for (int j=0; j<4; j++)
-		      {
-		        Log.d("TAG",i + " " + j +  " " +MatrixMap[i][j]);
-		        MatrixMap[i][j] = 0;
-		      }     
-		    }
-				kk.resetGame();
+			public void onClick(DialogInterface dialog, int which) 
+			{
+			  System.exit(0);
 			}
 		}).show();
 	}
