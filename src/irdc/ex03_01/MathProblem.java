@@ -1,11 +1,14 @@
 package irdc.ex03_01;
 
 /* import¬ÛÃöclass */
+import java.io.IOException;
 import java.util.Random;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -22,6 +25,8 @@ public class MathProblem extends Activity
   private int [] ButtonArray  = new int[10];
   private boolean [] Buttond  = new boolean[10];
   
+  private MediaPlayer mMediaPlayer; 
+
   private TextView question;
   private TextView answer;
   
@@ -43,6 +48,28 @@ public class MathProblem extends Activity
     total_question = 3;
     
     answer_str = "";
+    
+    mMediaPlayer = new MediaPlayer();
+
+    try
+    {
+      mMediaPlayer.setDataSource( "/sdcard/music_clock.wav" );
+      mMediaPlayer.setLooping(true);
+      mMediaPlayer.prepare();
+      mMediaPlayer.start(); 
+    } catch (IllegalArgumentException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IllegalStateException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     
     //GUI
     question = (TextView)findViewById(R.id.Question);
@@ -318,6 +345,7 @@ public class MathProblem extends Activity
          public void onClick(DialogInterface dialoginterface, int i)
          {
            finish();
+           mMediaPlayer.release();   
          }
          }
         )

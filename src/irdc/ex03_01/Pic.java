@@ -35,29 +35,8 @@ public class Pic {
       //Log.d("TAG", WhacAmoleView.RandomMatrixMapX + " " + WhacAmoleView.RandomMatrixMapY);
       //Log.d("TAG", indexX + " " + indexY);
 			
-			if (WhacAmoleView.RandomMatrixMapX == indexY+1 && WhacAmoleView.RandomMatrixMapY == indexX+1)
-			{
-			  Log.d("TAGXY", indexX + " " + indexY);
-			  if (Matrix[indexX][indexY] == WhacAmoleView.Randomclick)
-			  {
-    			  //press
-    			  WhacAmoleView.Stage++;
-    			  WhacAmoleView.WhacAmoleScore =  WhacAmoleView.Stage * 20; 
-    			  if (WhacAmoleView.StageNum > WhacAmoleView.Stage)
-    			  {
-    			    for (int i=0; i<3; i++)
-    			    {
-    			      for (int j=0; j<4; j++)
-    			      {
-    			        Matrix[i][j] = 0;
-    			      }     
-    			    }	
-    			    WhacAmoleView.RandomMatrixMapX = WhacAmoleView.random.nextInt(4) + 1;
-    			    WhacAmoleView.RandomMatrixMapY = WhacAmoleView.random.nextInt(3) + 1;
-    			    WhacAmoleView.Randomclick =  WhacAmoleView.random.nextInt(2) +1;
-    			  }
-			  }
-			}
+      WhacAmoleView.WhacAmoleScore =  WhacAmoleView.WhacAmoleScore + 20;
+			
 		}
 	}
 }

@@ -30,6 +30,7 @@ import android.widget.Toast;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentValues;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
@@ -40,18 +41,23 @@ public class alarmclock extends Activity
  
   private EditText am;
   private EditText ed;
-  private Spinner rt;
+  private Button rt;
   private Spinner game;
   private TimePicker tPicker;
   private String alarmclock_name;
+  
+  private alarmclock my;
+  
+  private boolean[] checked;
   
   private Bundle bunde;
   private Intent intent;
 
   private String next_id;
   private String list_item;
+  private String repeat;
   private Long id;
-  private int weekofday;
+  private String weekofday;
   private int gameid;
   private String ThisID;
   
@@ -73,6 +79,10 @@ public class alarmclock extends Activity
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.alarmclock);
 	    
+	    my = this;
+	    
+	    repeat="";
+	    
       //Fetch data form Inquire    
       intent=this.getIntent();
       bunde = intent.getExtras();
@@ -82,7 +92,7 @@ public class alarmclock extends Activity
 
       am = (EditText) findViewById(R.id.alarmname);
   		 ed = (EditText) findViewById(R.id.section);
-  		 rt = (Spinner) findViewById(R.id.repeat);
+  		 rt = (Button) findViewById(R.id.repeat);
       tPicker=(TimePicker)findViewById(R.id.tpr);
       tPicker.setIs24HourView(true);
       game = (Spinner) findViewById(R.id.cgame);
@@ -92,10 +102,10 @@ public class alarmclock extends Activity
 
 
   		//add repeat spinner
-  		String ispinner_list[] = this.getResources().getStringArray(R.array.ispinner_list);
-  		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, ispinner_list);
-  		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-  		rt.setAdapter(adapter);
+  		//String ispinner_list[] = this.getResources().getStringArray(R.array.ispinner_list);
+  		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, ispinner_list);
+  		//adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+  		//rt.setAdapter(adapter);
 
       //add repeat spinner
       String lgame[] = this.getResources().getStringArray(R.array.game);
@@ -156,7 +166,7 @@ public class alarmclock extends Activity
 
       if (id == 0)
       {
-        rt.setSelection(0);
+        //rt.setSelection(0);
         game.setSelection(0);
         delete_b.setEnabled(false);
       }
@@ -194,15 +204,75 @@ public class alarmclock extends Activity
         {
           ThisID = finddata.getString(0);
           ed.setText(finddata.getString(3));
-          weekofday = Integer.valueOf(finddata.getString(4));
-          rt.setSelection(Integer.valueOf(finddata.getString(4)));
+          weekofday = finddata.getString(4);
+          repeat = finddata.getString(4);
+          //rt.setSelection(Integer.valueOf(finddata.getString(4)));
           game.setSelection(Integer.valueOf(finddata.getString(5)));
           gameid=Integer.valueOf(finddata.getString(5));
         }
 
-        
+
         delete_b.setEnabled(true);           
         }
+      
+      rt.setOnClickListener(new Button.OnClickListener()
+      {
+              public void onClick(View v)
+              {       
+                //openOptionsDialog("builder");
+                
+                final CharSequence[] items =
+                  {"星期日", "星期一", "星期二", "星期三","星期四", "星期五", "星期六"};
+                
+                checked = new boolean[] { false,false,false,false,false,false,false};
+
+                if (!repeat.equals(""))
+                  {
+                  StringTokenizer Tok = new StringTokenizer(repeat, ",");
+                  while (Tok.hasMoreElements())
+                    {
+                    int index = Integer.valueOf((String) Tok.nextElement());
+                    checked[index] = true;
+                    //System.out.println("" + ++n +": "+Tok.nextElement());
+                    }                      
+                  }                  
+                repeat="";
+                
+                AlertDialog.Builder builder =  new AlertDialog.Builder(my);
+                builder.setTitle("週期");  
+                 //builder.setCancelable(false);
+                builder.setMultiChoiceItems(items, checked, new DialogInterface.OnMultiChoiceClickListener() 
+                  {
+                   public void onClick(final DialogInterface dialog, int which, boolean isChecked) 
+                     {
+                     }
+                 });
+                 
+               builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
+                   public void onClick(DialogInterface dialog, int id) 
+                     {
+                     repeat="";
+                     for (int i=0; i<7; i++)
+                       {
+                       if (checked[i] == true)
+                         {
+                          if (repeat.equals(""))
+                            repeat = Integer.toString(i); 
+                          else
+                            repeat = repeat + "," + i;
+                         }
+                      }
+                    dialog.cancel(); 
+                    } 
+                  }); 
+
+               AlertDialog alert = builder.create();  
+
+               alert.show();
+               
+              }
+      });
+
   		  		
       //add button
       additem.setOnClickListener(new Button.OnClickListener()
@@ -212,6 +282,8 @@ public class alarmclock extends Activity
                 /* 取得設定的間隔秒數 */
                   String alarmname = am.getText().toString();
                   
+                  if (id == 0)
+                  {
                   Cursor finddata = 
                     EX03_01.dbHelper.select(tables[4], fieldNames[4], "alarm_name='" + alarmname + "'", null, null, null, null);
                   
@@ -227,9 +299,10 @@ public class alarmclock extends Activity
                     
                         return;
                     }
+                  }
                   
                   int times = Integer.parseInt(ed.getText().toString())*1000;
-                  int repeat = rt.getSelectedItemPosition();
+                  //int repeat = rt.getSelectedItemPosition();
                   int rrgame = game.getSelectedItemPosition();
                   
                   Calendar aclock = Calendar.getInstance();                 
@@ -244,11 +317,11 @@ public class alarmclock extends Activity
                   /* 更新顯示的設定鬧鐘時間 */    
                   String tmpS = format(tPicker.getCurrentHour())+":"+
                               format(tPicker.getCurrentMinute());
-
+                  
                   if (id == 0)
                     {
                     //寫入資料庫
-                    String a[] = {next_id, alarmname, tmpS, Integer.toString(times/1000), Integer.toString(repeat),  Integer.toString(rrgame)};         
+                    String a[] = {next_id, alarmname, tmpS, Integer.toString(times/1000), repeat,  Integer.toString(rrgame)};         
                     long rowid = EX03_01.dbHelper.insert(tables[4], fieldNames[4] , a);  
                     
                     weekofday = repeat;
@@ -275,7 +348,7 @@ public class alarmclock extends Activity
                   else
                   {
                     //寫入資料庫
-                  String a[] = {ThisID, alarmname, tmpS , Integer.toString(times/1000), Integer.toString(repeat),  Integer.toString(rrgame)};         
+                  String a[] = {ThisID, alarmname, tmpS , Integer.toString(times/1000), repeat,  Integer.toString(rrgame)};         
                   long rowid = EX03_01.dbHelper.update(tables[4], fieldNames[4] , a, "alarm_name='" + alarmclock_name + "'", null);  
                     
                     //先取消

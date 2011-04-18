@@ -111,14 +111,16 @@ android:layout_x="18px"
 android:layout_y="283px"
 >
 </TextView>
-<Spinner
+<Button
 android:id="@+id/repeat"
-android:layout_width="181px"
-android:layout_height="36px"
+android:layout_width="60px"
+android:layout_height="40px"
+android:text="週期"
+android:textSize="16sp"
 android:layout_x="112px"
 android:layout_y="286px"
 >
-</Spinner>
+</Button>
 
 <TextView
 android:id="@+id/widget44"

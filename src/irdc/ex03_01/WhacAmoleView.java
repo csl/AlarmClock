@@ -1,5 +1,6 @@
 package irdc.ex03_01;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +12,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,10 +20,14 @@ import android.view.View;
 public class WhacAmoleView extends View{
 	
 	static Random random = new Random();
+	
+	private MediaPlayer mMediaPlayer; 
+
 	static int WhacAmoleScore;
 	private int[][] MatrixMap = new int[3][4];
 	static int StageNum = 3;	
 	static int Stage = 0;
+	static int Score=200;
   static int RandomMatrixMapX = 0;
   static int RandomMatrixMapY = 0;
   static int Randomclick = 0;
@@ -32,6 +38,29 @@ public class WhacAmoleView extends View{
 		
 		WhacAmoleScore = 0;
 		Stage = 0;
+		
+    mMediaPlayer = new MediaPlayer();
+
+    try
+    {
+      mMediaPlayer.setDataSource( "/sdcard/music_clock.wav" );
+      mMediaPlayer.setLooping(true);
+      mMediaPlayer.prepare();
+      mMediaPlayer.start(); 
+    } catch (IllegalArgumentException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IllegalStateException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
 		
 		RandomMatrixMapX = random.nextInt(4) + 1;
    RandomMatrixMapY = random.nextInt(3) + 1;
@@ -68,7 +97,7 @@ public class WhacAmoleView extends View{
 	{
 		super.onDraw(canvas);
 		
-		if(WhacAmoleScore>=60){
+		if(WhacAmoleScore>=Score){
 			getHandler().removeCallbacks(flush1000ms);
 			getHandler().removeCallbacks(flush80ms);
 			doGameOver();
@@ -101,6 +130,8 @@ public class WhacAmoleView extends View{
 			
 			public void onClick(DialogInterface dialog, int which) 
 			{
+       mMediaPlayer.release();  
+
 			  System.exit(0);
 			}
 		}).show();
@@ -112,7 +143,8 @@ public class WhacAmoleView extends View{
 	
 	private void drawInfoPanel(Canvas canvas)
 	{
-		canvas.drawText("rule: (" + RandomMatrixMapX +  ","  + RandomMatrixMapY + ")," + "click " + Randomclick, 29, 20, PaintSuite.KV4text);
+		//canvas.drawText("rule: (" + RandomMatrixMapX +  ","  + RandomMatrixMapY + ")," + "click " + Randomclick, 29, 20, PaintSuite.KV4text);
+    canvas.drawText("Goal Score: " + Score, 29, 20, PaintSuite.KV4text);
 		canvas.drawText("Score:" + WhacAmoleScore , 29, 50, PaintSuite.KV4text);
 	}
 
